@@ -1,0 +1,5 @@
+../Core/Src/hardware.c:17:6:BKIT_COM_HW_Init	16	static
+../Core/Src/hardware.c:70:23:BKIT_COM_HW_Receive	40	static
+../Core/Src/hardware.c:105:6:BKIT_COM_HW_Send	24	static
+../Core/Src/hardware.c:130:6:HAL_UART_RxCpltCallback	16	static
+../Core/Src/hardware.c:145:6:HAL_SPI_TxRxCpltCallback	16	static
