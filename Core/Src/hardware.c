@@ -228,23 +228,31 @@ void BKIT_COM_HW_Init(USER_CHOICE user_choice, int arg1){
 	}
 }
 BKIT_COM_StateTypedef BKIT_COM_HW_Receive(uint8_t* buffer, uint32_t Timeout){
+	// Slave
 	if(hardware.used_protocol.spi == &hspi1){
-			if(buffer == NULL){
-				return BKIT_COM_ERROR;
-			}
-			uint32_t tickStart = HAL_GetTick();
-			while(hardware.isDataCome == 0){
-				if(HAL_GetTick() - tickStart >= Timeout){
-					return BKIT_COM_TIMEOUT;
-				}
-			}
+//		if(buffer == NULL){
+//			return BKIT_COM_ERROR;
+//		}
+//		uint32_t tickStart = HAL_GetTick();
+//		while(hardware.isDataCome == 0){
+//			if(HAL_GetTick() - tickStart >= Timeout){
+//				return BKIT_COM_TIMEOUT;
+//			}
+//		}
+
+		// timer here
+
+		if(hardware.isDataCome){
 			hardware.isDataCome = 0;
 			hardware.rx_size = hardware.rx_buffer[3] + 4;
 			for(int i = 0; i < hardware.rx_size; i++){
 				buffer[i] = hardware.rx_buffer[i];
 			}
 			return BKIT_COM_OK;
+		}
+		return BKIT_COM_BUSY;
 	}
+	// Master
 	HAL_GPIO_WritePin(SPI2_CSS_GPIO_Port, SPI2_CSS_Pin, RESET);
 	HAL_StatusTypeDef status = HAL_SPI_TransmitReceive(hardware.used_protocol.spi,  hardware.tx_buffer,hardware.rx_buffer, 4, 2000);
 	if(status == HAL_OK){

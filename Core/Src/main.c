@@ -123,14 +123,27 @@ int main(void)
 //    else if(t == BKIT_COM_ERROR){
 //    	HAL_UART_Transmit(&huart1, (uint8_t*)"ERROR", 5, 1000);
 //    }
-  uint8_t buf[8]={0x05,0x06,0x07,0x04,0x99,0x95,0x97,0x98};
+  uint8_t rxbuf[10];
   BKIT_COM_HW_Init(SPI, SLAVE);
-  BKIT_COM_HW_Send(buf, 8);
+  uint8_t state = 0;
   while (1)
   {
+	  switch(state){
+	  case 0:{
+		  if(BKIT_COM_HW_Receive(rxbuf, 10) == BKIT_COM_OK){
+			  state = 1;
+		  }
+		  break;
+	  }
+	  case 1:{
+		  BKIT_COM_HW_Send(rxbuf, 10);
+	  }
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+
   }
   /* USER CODE END 3 */
 }
