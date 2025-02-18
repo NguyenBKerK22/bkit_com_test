@@ -106,8 +106,7 @@ int main(void)
 //  BKIT_COM_HW_Init(SPI, 1, 115200);
 //  BKIT_COM_HW_Send();
 //  HAL_UART_Transmit(&huart1, (uint8_t*)"HEHE", 4, HAL_MAX_DELAY);
-//  uint8_t buf[8]={0xFA,0x00,0x00,0x04,0xFF,0x02,0x04,0x08};
-  	uint8_t buf[8];
+//  	uint8_t buf[8];
 //  uint8_t buf[10];
 //  uint8_t buf[10];
 
@@ -115,17 +114,18 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  BKIT_COM_HW_Init(SPI, MASTER);
-  BKIT_COM_StateTypedef t = BKIT_COM_HW_Receive(buf, 10000);
-  if(t==BKIT_COM_TIMEOUT){
-	  HAL_UART_Transmit(&huart1, (uint8_t*)"TIMEO", 5, 1000);
-  }
-  else if(t == BKIT_COM_ERROR){
-	  HAL_UART_Transmit(&huart1, (uint8_t*)"ERROR", 5, 1000);
-  }
-//  HAL_UART_Transmit(&huart1, buf, 8, 1000);
-//  BKIT_COM_HW_Init(SPI, SLAVE);
-//  BKIT_COM_HW_Send(buf);
+//  	uint8_t buf[10];
+//    BKIT_COM_HW_Init(SPI, MASTER);
+//    BKIT_COM_StateTypedef t = BKIT_COM_HW_Receive(buf, 10000);
+//    if(t==BKIT_COM_TIMEOUT){
+//    	HAL_UART_Transmit(&huart1, (uint8_t*)"TIMEO", 5, 1000);
+//    }
+//    else if(t == BKIT_COM_ERROR){
+//    	HAL_UART_Transmit(&huart1, (uint8_t*)"ERROR", 5, 1000);
+//    }
+  uint8_t buf[8]={0x05,0x06,0x07,0x04,0x99,0x95,0x97,0x98};
+  BKIT_COM_HW_Init(SPI, SLAVE);
+  BKIT_COM_HW_Send(buf, 8);
   while (1)
   {
     /* USER CODE END WHILE */

@@ -38,6 +38,7 @@ struct BKIT_COM_Hardware{
 typedef enum{
 	RECEIVED_HEADER,
 	RECEIVED_PACKET,
+	SEND_PAYLOAD
 }Hardware_StateTypedef;
 typedef enum{
 	BKIT_COM_OK 		= 	0x00U,
@@ -50,7 +51,7 @@ extern struct BKIT_COM_Hardware hardware;
 extern I2C_HandleTypeDef hi2c2;
 void BKIT_COM_HW_Init(USER_CHOICE user_choice, int arg1);
 BKIT_COM_StateTypedef BKIT_COM_HW_Receive(uint8_t* buffer, uint32_t Timeout);
-void BKIT_COM_HW_Send();
+void BKIT_COM_HW_Send(uint8_t* buffer, int size);
 #define BKIT_COM_HW_Init_UART(a) BKIT_COM_HW_Init(UART, a); // UART(1
 #define BKIT_COM_HW_Init_SPI(a) BKIT_COM_HW_Init(SPI, a);
 #define BKIT_COM_HW_Init_I2C(a) BKIT_COM_HW_Init(I2C, a);

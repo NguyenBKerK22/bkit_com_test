@@ -246,23 +246,16 @@ BKIT_COM_StateTypedef BKIT_COM_HW_Receive(uint8_t* buffer, uint32_t Timeout){
 			return BKIT_COM_OK;
 	}
 	HAL_GPIO_WritePin(SPI2_CSS_GPIO_Port, SPI2_CSS_Pin, RESET);
-	HAL_StatusTypeDef status = HAL_SPI_TransmitReceive(hardware.used_protocol.spi,  hardware.tx_buffer,hardware.rx_buffer, 4, 1000);
+	HAL_StatusTypeDef status = HAL_SPI_TransmitReceive(hardware.used_protocol.spi,  hardware.tx_buffer,hardware.rx_buffer, 4, 2000);
 	if(status == HAL_OK){
 		HAL_UART_Transmit(&huart1,hardware.rx_buffer, 4, Timeout);
-		status = HAL_SPI_TransmitReceive(hardware.used_protocol.spi,  hardware.tx_buffer,hardware.rx_buffer, 4 , 1000);
+		status = HAL_SPI_TransmitReceive(hardware.used_protocol.spi,  hardware.tx_buffer, hardware.rx_buffer + 4, 4 , 2000);
 	}
-	HAL_UART_Transmit(&huart1,hardware.rx_buffer, 4, Timeout);
+	HAL_UART_Transmit(&huart1,hardware.rx_buffer, 8, Timeout);
 	HAL_GPIO_WritePin(SPI2_CSS_GPIO_Port, SPI2_CSS_Pin, SET);
-	//#define HAL_SPI_ERROR_NONE              (0x00000000U)   /*!< No error                               */
-	//#define HAL_SPI_ERROR_MODF              (0x00000001U)   /*!< MODF error                             */
-	//#define HAL_SPI_ERROR_CRC               (0x00000002U)   /*!< CRC error                              */
-	//#define HAL_SPI_ERROR_OVR               (0x00000004U)   /*!< OVR error                              */
-	//#define HAL_SPI_ERROR_DMA               (0x00000010U)   /*!< DMA transfer error                     */
-	//#define HAL_SPI_ERROR_FLAG              (0x00000020U)   /*!< Error on RXNE/TXE/BSY Flag             */
-	//#define HAL_SPI_ERROR_ABORT
 	return (BKIT_COM_StateTypedef)status;
 }
-void BKIT_COM_HW_Send(uint8_t* buffer){
+void BKIT_COM_HW_Send(uint8_t* buffer,int size){
 	switch(hardware.used_protocol.user){
 		case UART:
 			HAL_UART_Transmit(hardware.used_protocol.uart, (uint8_t*)buffer, 4, HAL_MAX_DELAY);
@@ -273,14 +266,16 @@ void BKIT_COM_HW_Send(uint8_t* buffer){
 			if(hardware.used_protocol.spi == &hspi2){
 				HAL_GPIO_WritePin(SPI2_CSS_GPIO_Port, SPI2_CSS_Pin, RESET);
 				HAL_SPI_TransmitReceive(hardware.used_protocol.spi, (uint8_t*)buffer, (uint8_t*)hardware.rx_buffer, 4, HAL_MAX_DELAY);
-				HAL_Delay(5);
+				HAL_Delay(3);
 				HAL_SPI_TransmitReceive(hardware.used_protocol.spi, (uint8_t*)buffer + 4, (uint8_t*)hardware.rx_buffer, * (buffer + 3), HAL_MAX_DELAY);
 				HAL_GPIO_WritePin(SPI2_CSS_GPIO_Port, SPI2_CSS_Pin, SET);
 			}
 			else{
-				for(int i=0;i<8;i++){
-
+				for(int i = 0; i < size; i++){
+					hardware.tx_buffer[i] = buffer[i];
 				}
+				hardware.used_protocol.spi->Instance->DR = hardware.tx_buffer[0];
+				hardware.state = SEND_PAYLOAD;
 			}
 		break;
 		case I2C:
@@ -313,6 +308,10 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef * hspi){
 		case RECEIVED_PACKET:
 			hardware.isDataCome = 1;
 			HAL_SPI_TransmitReceive_IT(hardware.used_protocol.spi, hardware.tx_buffer, hardware.rx_buffer, 4);
+			hardware.state = RECEIVED_HEADER;
+			break;
+		case SEND_PAYLOAD:
+			HAL_SPI_TransmitReceive_IT(hardware.used_protocol.spi, hardware.tx_buffer + 4, hardware.rx_buffer, hardware.tx_buffer[3]);
 			hardware.state = RECEIVED_HEADER;
 			break;
 		default:
