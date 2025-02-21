@@ -63,8 +63,8 @@ all: main-build
 main-build: bkit_com_test.elf secondary-outputs
 
 # Tool invocations
-bkit_com_test.elf bkit_com_test.map: $(OBJS) $(USER_OBJS) D:\bkit_com_test\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "bkit_com_test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\bkit_com_test\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bkit_com_test.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+bkit_com_test.elf bkit_com_test.map: $(OBJS) $(USER_OBJS) F:\WorkSpace\BKIT-SPACE\bkit_com_test\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "bkit_com_test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"F:\WorkSpace\BKIT-SPACE\bkit_com_test\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bkit_com_test.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

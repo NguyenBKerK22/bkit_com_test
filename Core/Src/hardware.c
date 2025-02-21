@@ -230,16 +230,9 @@ void BKIT_COM_HW_Init(USER_CHOICE user_choice, int arg1){
 BKIT_COM_StateTypedef BKIT_COM_HW_Receive(uint8_t* buffer, uint32_t Timeout){
 	// Slave
 	if(hardware.used_protocol.spi == &hspi1){
-//		if(buffer == NULL){
-//			return BKIT_COM_ERROR;
-//		}
-//		uint32_t tickStart = HAL_GetTick();
-//		while(hardware.isDataCome == 0){
-//			if(HAL_GetTick() - tickStart >= Timeout){
-//				return BKIT_COM_TIMEOUT;
-//			}
-//		}
-
+		if(!buffer){
+			return BKIT_COM_ERROR;
+		}
 		// timer here
 
 		if(hardware.isDataCome){

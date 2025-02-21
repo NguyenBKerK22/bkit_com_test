@@ -1,5 +1,5 @@
 ../Core/Src/hardware.c:177:6:BKIT_COM_HW_Init	12
-../Core/Src/hardware.c:230:23:BKIT_COM_HW_Receive	7
-../Core/Src/hardware.c:258:6:BKIT_COM_HW_Send	7
-../Core/Src/hardware.c:287:6:HAL_UART_RxCpltCallback	3
-../Core/Src/hardware.c:302:6:HAL_SPI_TxRxCpltCallback	5
+../Core/Src/hardware.c:230:23:BKIT_COM_HW_Receive	6
+../Core/Src/hardware.c:259:6:BKIT_COM_HW_Send	7
+../Core/Src/hardware.c:288:6:HAL_UART_RxCpltCallback	3
+../Core/Src/hardware.c:303:6:HAL_SPI_TxRxCpltCallback	5
